@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>立式水封罐参数计算器</title>
+  <title>Vertical Seal Tank Calculator</title>
   <style>
     body { font-family: "Microsoft JhengHei", Arial, sans-serif; background: #f8f8f8; }
     .container { max-width: 900px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px #ccc; padding: 30px; }
@@ -16,65 +16,69 @@
     .output-value { color: #222; font-weight: bold; }
     .unit { color: #555; }
     .formula { font-size: 0.95em; color: #666; }
-    .btn { background: #d00; color: #fff; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; }
+    .btn { background: #d00; color: #fff; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; margin: 0 8px;}
     .btn:hover { background: #a00; }
     .section-title { background: #f2f2f2; font-weight: bold; color: #333; }
+    @media print {
+      .btn { display: none; }
+      .container { box-shadow: none; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>立式水封罐参数计算器</h2>
+    <h2>Vertical Seal Tank Calculator</h2>
     <form id="sealTankForm" oninput="calculateResults()">
       <table>
         <tr>
-          <th>参数</th>
-          <th>数值</th>
-          <th>单位</th>
-          <th>说明/公式</th>
+          <th>Parameter</th>
+          <th>Value</th>
+          <th>Unit</th>
+          <th>Description/Formula</th>
         </tr>
-        <tr><td colspan="4" class="section-title">输入参数（红色为可修改）</td></tr>
-        <!-- 输入参数 -->
+        <tr><td colspan="4" class="section-title">Input Data (Red Editable)</td></tr>
+        <!-- Input Parameters -->
         <tr>
-          <td class="input-label">温度 (T)</td>
+          <td class="input-label">Temperature (T)</td>
           <td><input type="number" step="0.1" id="tempC" class="input-box" value="25.0"></td>
           <td class="unit">°C</td>
-          <td>操作温度</td>
+          <td>Operating temperature</td>
         </tr>
         <tr>
-          <td class="input-label">压力 (P)</td>
+          <td class="input-label">Pressure (P)</td>
           <td><input type="number" step="0.01" id="pressure" class="input-box" value="0.2"></td>
           <td class="unit">kg/cm²(G)</td>
-          <td>操作压力</td>
+          <td>Operating pressure</td>
         </tr>
         <tr>
-          <td class="input-label">分子量 (MW)</td>
+          <td class="input-label">Molecular Weight (MW)</td>
           <td><input type="number" step="0.01" id="mw" class="input-box" value="22.6"></td>
           <td class="unit"></td>
-          <td>气体分子量</td>
+          <td>Gas molecular weight</td>
         </tr>
         <tr>
-          <td class="input-label">气体密度 (ρ)</td>
+          <td class="input-label">Gas Density (ρ)</td>
           <td>
             <input type="number" step="0.0001" id="gasDensityNm3" class="input-box" value="1.0083"> (kg/Nm³)<br>
             <input type="number" step="0.0001" id="gasDensity" class="input-box" value="1.1085"> (kg/m³)
           </td>
           <td class="unit"></td>
-          <td>标准状况气体密度</td>
+          <td>Standard gas density</td>
         </tr>
         <tr>
-          <td class="input-label">液体密度 (ρ液)</td>
+          <td class="input-label">Liquid Density (ρ<sub>liq</sub>)</td>
           <td><input type="number" step="0.1" id="liquidDensity" class="input-box" value="1000"></td>
           <td class="unit">kg/m³</td>
-          <td>通常为水密度</td>
+          <td>Usually water density</td>
         </tr>
         <tr>
-          <td class="input-label">罐直径 (D)</td>
+          <td class="input-label">Tank Diameter (D)</td>
           <td><input type="number" step="0.01" id="tankDiameter" class="input-box" value="1.2"></td>
           <td class="unit">m</td>
-          <td>罐体外径</td>
+          <td>Tank outer diameter</td>
         </tr>
         <tr>
-          <td class="input-label">入口管直径 (d)</td>
+          <td class="input-label">Inlet Diameter (d)</td>
           <td>
             <input type="number" step="0.01" id="inletDiameter" class="input-box" value="0.6"> (m)<br>
             <input type="number" step="0.01" id="inletDiameterInch" class="input-box" value="24"> (inch)
@@ -83,137 +87,28 @@
           <td>1 inch = 25.4 mm</td>
         </tr>
         <tr>
-          <td class="input-label">流量系数 (k₂)</td>
+          <td class="input-label">Flow Coefficient (k₂)</td>
           <td><input type="number" step="0.01" id="k2" class="input-box" value="0.75"></td>
           <td class="unit"></td>
-          <td>0.5~1，经验值</td>
+          <td>Empirical value 0.5~1</td>
         </tr>
         <tr>
-          <td class="input-label">水封水深 (h₂)</td>
+          <td class="input-label">Seal Water Depth (h₂)</td>
           <td><input type="number" step="0.01" id="h2" class="input-box" value="0.3"></td>
           <td class="unit">m</td>
-          <td>水封水深</td>
+          <td>Seal water depth</td>
         </tr>
         <tr>
-          <td class="input-label">罐颈高度 (h)</td>
+          <td class="input-label">Neck Height (h)</td>
           <td><input type="number" step="0.0001" id="neckHeight" class="input-box" value="0.0204"></td>
           <td class="unit">m</td>
-          <td>罐颈高度</td>
+          <td>Tank neck height</td>
         </tr>
         <tr>
-          <td class="input-label">罐顶封头高度 (h₀)</td>
+          <td class="input-label">Top Cap Height (h₀)</td>
           <td><input type="number" step="0.01" id="h0" class="input-box" value="0.6"></td>
           <td class="unit">m</td>
-          <td>罐顶封头高度</td>
+          <td>Tank top cap height</td>
         </tr>
         <tr>
-          <td class="input-label">气室高度 (h₁)</td>
-          <td><input type="number" step="0.01" id="h1" class="input-box" value="2.1"></td>
-          <td class="unit">m</td>
-          <td>气室高度</td>
-        </tr>
-        <tr>
-          <td class="input-label">出口区高度 (h₃)</td>
-          <td><input type="number" step="0.01" id="h3" class="input-box" value="0.5"></td>
-          <td class="unit">m</td>
-          <td>出口区高度</td>
-        </tr>
-        <tr>
-          <td class="input-label">罐底封头高度 (h₄)</td>
-          <td><input type="number" step="0.01" id="h4" class="input-box" value="0.4"></td>
-          <td class="unit">m</td>
-          <td>罐底封头高度</td>
-        </tr>
-        <tr>
-          <td class="input-label">裙座高度 (h₅)</td>
-          <td><input type="number" step="0.01" id="h5" class="input-box" value="1.0"></td>
-          <td class="unit">m</td>
-          <td>裙座高度</td>
-        </tr>
-        <tr>
-          <td class="input-label">总高</td>
-          <td><input type="number" step="0.01" id="totalHeight" class="input-box" value="5.2"></td>
-          <td class="unit">m</td>
-          <td>罐体总高</td>
-        </tr>
-
-        <tr><td colspan="4" class="section-title">输出参数（黑色为自动计算）</td></tr>
-        <!-- 输出参数 -->
-        <tr>
-          <td class="output-label">罐体体积 (V)</td>
-          <td class="output-value" id="tankVolume">-</td>
-          <td class="unit">m³</td>
-          <td class="formula">V = π × (D/2)² × 总高</td>
-        </tr>
-        <tr>
-          <td class="output-label">入口截面积 (A)</td>
-          <td class="output-value" id="inletArea">-</td>
-          <td class="unit">m²</td>
-          <td class="formula">A = π × (d/2)²</td>
-        </tr>
-        <tr>
-          <td class="output-label">水封压力 (P<sub>seal</sub>)</td>
-          <td class="output-value" id="sealPressure">-</td>
-          <td class="unit">kPa</td>
-          <td class="formula">P<sub>seal</sub> = h₂ × ρ液 × g / 1000</td>
-        </tr>
-        <tr>
-          <td class="output-label">最大气体流量 (Q<sub>max</sub>)</td>
-          <td class="output-value" id="maxGasFlow">-</td>
-          <td class="unit">Nm³/h</td>
-          <td class="formula">Q<sub>max</sub> = k₂ × A × √[2 × g × h₂] × 3600 / ρ(kg/m³)</td>
-        </tr>
-      </table>
-      <div style="text-align:center; margin-top:20px;">
-        <button type="button" class="btn" onclick="calculateResults()">重新计算</button>
-      </div>
-    </form>
-  </div>
-  <script>
-    function calculateResults() {
-      // 读取输入
-      const tempC = parseFloat(document.getElementById('tempC').value);
-      const pressure = parseFloat(document.getElementById('pressure').value);
-      const mw = parseFloat(document.getElementById('mw').value);
-      const gasDensityNm3 = parseFloat(document.getElementById('gasDensityNm3').value);
-      const gasDensity = parseFloat(document.getElementById('gasDensity').value);
-      const liquidDensity = parseFloat(document.getElementById('liquidDensity').value);
-      const tankDiameter = parseFloat(document.getElementById('tankDiameter').value);
-      const inletDiameter = parseFloat(document.getElementById('inletDiameter').value);
-      const inletDiameterInch = parseFloat(document.getElementById('inletDiameterInch').value);
-      const k2 = parseFloat(document.getElementById('k2').value);
-      const h2 = parseFloat(document.getElementById('h2').value);
-      const neckHeight = parseFloat(document.getElementById('neckHeight').value);
-      const h0 = parseFloat(document.getElementById('h0').value);
-      const h1 = parseFloat(document.getElementById('h1').value);
-      const h3 = parseFloat(document.getElementById('h3').value);
-      const h4 = parseFloat(document.getElementById('h4').value);
-      const h5 = parseFloat(document.getElementById('h5').value);
-      const totalHeight = parseFloat(document.getElementById('totalHeight').value);
-
-      // 常数
-      const pi = Math.PI;
-      const g = 9.80665; // m/s²
-
-      // 罐体体积 V = π × (D/2)² × 总高
-      const tankVolume = pi * Math.pow(tankDiameter/2, 2) * totalHeight;
-
-      // 入口截面积 A = π × (d/2)²
-      const inletArea = pi * Math.pow(inletDiameter/2, 2);
-
-      // 水封压力 P_seal = h2 × ρ液 × g / 1000 (kPa)
-      const sealPressure = h2 * liquidDensity * g / 1000;
-
-      // 最大气体流量 Qmax = k2 × A × sqrt(2 × g × h2) × 3600 / ρ(kg/m³)
-      const maxGasFlow = k2 * inletArea * Math.sqrt(2 * g * h2) * 3600 / gasDensity;
-
-      // 输出
-      document.getElementById('tankVolume').innerText = isNaN(tankVolume) ? '-' : tankVolume.toFixed(3);
-      document.getElementById('inletArea').innerText = isNaN(inletArea) ? '-' : inletArea.toFixed(4);
-      document.getElementById('sealPressure').innerText = isNaN(sealPressure) ? '-' : sealPressure.toFixed(2);
-      document.getElementById('maxGasFlow').innerText = isNaN(maxGasFlow) ? '-' : maxGasFlow.toFixed(1);
-    }
-    window.onload = calculateResults;
-  </script>
-</body>
-</html>
+          <td class="input-label">Airspace Height
